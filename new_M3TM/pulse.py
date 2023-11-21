@@ -260,10 +260,10 @@ class SimPulse:
             ref_flu = self.fluence * (e_p0**2 * r_p_tot + e_s0**2 * r_s_tot)
             trans_flu = self.fluence * (e_p0**2 * t_p_tot + e_s0**2 * t_s_tot)
 
-            print(abs_flu)
-            print(ref_flu)
-            print(trans_flu)
-            print(self.fluence-trans_flu-ref_flu)
+            print('directly computed absorbed fluence:', abs_flu)
+            print('refelcted fluence:', ref_flu)
+            print('transmitted fluence:', trans_flu)
+            print('flu-trans-ref:', self.fluence-trans_flu-ref_flu)
 
             excitation_map = np.multiply(pump_grid[..., np.newaxis], powers)
 
