@@ -1,4 +1,5 @@
 import numpy as np
+import scipy
 from scipy import constants as sp
 from matplotlib import pyplot as plt
 from finderb import finderb
@@ -272,12 +273,12 @@ class SimPulse:
 
             return excitation_map
 
-    def visualize(self, axis):
-        # This methods plots the spaital/temporal/both dependencies of the pump pulse.
+    def visualize(self, axis, fit=False):
+        # This method plots the spatial/temporal/both dependencies of the pump pulse.
 
         # Input:
         # self (object). The pulse object in use
-        # axis (String). Chose wheather to plot the temporal profile ('t'), the spatial profile of absorption ('z')
+        # axis (String). Chose whether to plot the temporal profile ('t'), the spatial profile of absorption ('z')
         # or both ('tz').
 
         # Returns:
@@ -304,10 +305,26 @@ class SimPulse:
         elif axis == 'z':
             norm = np.amax(self.pulse_map[finderb(self.delay, self.pulse_time_grid)[0], :])
             sample_depth = np.cumsum(self.Sam.get_params('dz')) - self.Sam.get_params('dz')[0]
-            plt.plot(sample_depth, self.pulse_map[finderb(self.delay, self.pulse_time_grid)[0], :]/norm)
-            plt.xlabel(r'sample depth z [m]', fontsize=16)
+            plt.plot(sample_depth*1e9, self.pulse_map[finderb(self.delay, self.pulse_time_grid)[0], :]/norm)
+            plt.xlabel(r'sample depth z [nm]', fontsize=16)
             plt.ylabel(r'S(z)/S$_{max}$', fontsize=16)
             plt.show()
+
+            if fit:
+                def fit_func(depth, pen_dep):
+                    return np.exp(-depth/pen_dep)
+                excited_depth = sample_depth[self.pulse_map[finderb(self.delay, self.pulse_time_grid)[0], :] != 0]
+                excited_depth -= excited_depth[0]
+                to_fit = self.pulse_map[finderb(self.delay, self.pulse_time_grid)[0], :] / norm
+                to_fit = to_fit[to_fit != 0]
+                p0 = 30e-9
+                pen_dep, cv = scipy.optimize.curve_fit(fit_func, excited_depth, to_fit, p0)
+                plt.plot(excited_depth, to_fit, ls='dotted', lw=3, label='Abeles\' method')
+                plt.plot(excited_depth, fit_func(excited_depth, pen_dep[0]), ls ='--', label='fit with pen_dep=' + str(pen_dep[0]*1e9) + 'nm')
+                plt.legend(fontsize=14)
+                plt.xlabel(r'depth of excited sample [m]', fontsize=16)
+                plt.ylabel(r'Normalized power', fontsize=16)
+                plt.show()
 
         else:
             sample_depth = np.cumsum(self.Sam.get_params('dz'))-self.Sam.get_params('dz')[0]
@@ -319,7 +336,6 @@ class SimPulse:
             plt.show()
 
         ### CHANGES: s to ps, m to nm, full power
-        ### ADD: Documentation
 
         return
 
