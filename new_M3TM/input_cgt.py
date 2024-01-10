@@ -28,7 +28,7 @@ sample.add_layers(material=SiO2, layers=149, kappap_int='av', n_comp=1.5+0j, pen
 
 # Create a laser pulse with the desired parameters. (Fluence in mJ/cm^2)
 pulse = SimPulse(sample=sample, pulse_width=25e-15, fluence=0.5, delay=1e-12, pulse_dt=1e-16, method='Abeles',
-                 theta=0, phi=1/4, energy=1.55)
+                 theta=0, phi=1/4, energy=3.1)
 pulse.visualize(axis='z', fit=True)
 
 
