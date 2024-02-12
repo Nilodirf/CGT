@@ -273,7 +273,7 @@ class SimPulse:
 
             return excitation_map
 
-    def visualize(self, axis, fit=False):
+    def visualize(self, axis, fit=None):
         # This method plots the spatial/temporal/both dependencies of the pump pulse.
 
         # Input:
@@ -310,9 +310,13 @@ class SimPulse:
             plt.ylabel(r'S(z)/S$_{max}$', fontsize=16)
             plt.show()
 
-            if fit:
-                def fit_func(depth, pen_dep):
-                    return np.exp(-depth/pen_dep)
+            if fit is not None:
+                if fit == 'exp':
+                    def fit_func(depth, pen_dep):
+                        return np.exp(-depth/pen_dep)
+                elif fit == 'lin':
+                    def fit_func(depth, slope):
+                        return 1-(slope*depth)
                 excited_depth = sample_depth[self.pulse_map[finderb(self.delay, self.pulse_time_grid)[0], :] != 0]
                 excited_depth -= excited_depth[0]
                 to_fit = self.pulse_map[finderb(self.delay, self.pulse_time_grid)[0], :] / norm
