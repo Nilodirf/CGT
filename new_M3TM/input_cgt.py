@@ -23,13 +23,13 @@ SiO2 = SimMaterials(name='SiO2', tdeb=403, dz=2e-9, vat=1e-30, ce_gamma=0., cp_m
 # The first material to be added will be closest to the laser pulse and so on.
 sample = SimSample()
 sample.add_layers(material=hBN, layers=7, n_comp=2.+0.j, pen_dep=1)
-sample.add_layers(material=CGT, layers=75, kappap_int='av', n_comp=4.+2.j, pen_dep=10e-9)
+sample.add_layers(material=CGT, layers=7, kappap_int='av', n_comp=4.+2.j, pen_dep=10e-9)
 sample.add_layers(material=SiO2, layers=149, kappap_int='av', n_comp=1.5+0j, pen_dep=1)
 
 # Create a laser pulse with the desired parameters. (Fluence in mJ/cm^2)
 pulse = SimPulse(sample=sample, pulse_width=25e-15, fluence=0.5, delay=1e-12, pulse_dt=1e-16, method='Abeles',
                  theta=0, phi=1/4, energy=3.1)
-pulse.visualize(axis='z', fit=True)
+pulse.visualize(axis='z', fit='exp')
 
 
 # # Initialize the simulation with starting temperature and final time, then run the solve function:
