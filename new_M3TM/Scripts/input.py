@@ -26,7 +26,7 @@ cri3 = SimMaterials(name='CrI3', pen_dep=30e-9, tdeb=134, dz=1e-9, vat=1.35e-28,
 # The first material to be added will be closest to the laser pulse and so on.
 sample = SimSample()
 sample.add_layers(material=hbn, layers=8)
-sample.add_layers(material=cgt, layers=76, kappap_int=10.)
+sample.add_layers(material=cgt, layers=8, kappap_int=10.)
 sample.add_layers(material=sio2, layers=150, kappap_int='av')
 
 # Create a laser pulse with the desired parameters. (Fluence in mJ/cm^2)
@@ -40,4 +40,4 @@ solution = sim.get_t_m_maps()
 
 
 # Save the data in a file with the desired name
-sim.save_data(solution, save_file='cgt/thick_multilayer')
+sim.save_data(solution, save_file='cgt/thin_multilayer')
